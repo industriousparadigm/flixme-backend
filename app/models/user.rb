@@ -4,7 +4,8 @@ class User < ApplicationRecord
   has_many :receivers, through: :requested_friendships, class_name: 'User'
   has_many :requesters, through: :received_friendships, class_name: 'User'
 
-  has_many :movies
+  has_many :movie_watches
+  has_many :movies, through: :movie_watches
 
   def friends
     requesters + receivers
