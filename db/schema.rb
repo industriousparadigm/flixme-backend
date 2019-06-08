@@ -54,19 +54,23 @@ ActiveRecord::Schema.define(version: 20190607101407) do
     t.string "overview"
     t.string "release_date"
     t.string "title"
+    t.string "original_title"
     t.string "original_language"
     t.integer "vote_count"
     t.float "vote_average"
     t.string "backdrop_path"
     t.float "popularity"
+    t.boolean "video"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
+    t.string "email"
     t.string "password"
     t.string "avatarUrl"
+    t.string "firstName"
+    t.string "lastName"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
