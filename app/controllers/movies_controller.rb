@@ -3,10 +3,6 @@ class MoviesController < ApplicationController
   def index
     movies = get_movies(params[:page])
 
-    # params['limit'] ? limit = params['limit'].to_i : limit = 20
-    # offset = params['offset'].to_i
-    # movies = Movie.limit(limit).offset(offset).order('popularity desc')
-
     render json: movies
   end
 
