@@ -33,7 +33,7 @@ class MoviesController < ApplicationController
   end
 
   def search
-    search_url = "https://api.themoviedb.org/3/search/movie?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&page=1"
+    search_url = "https://api.themoviedb.org/3/search/movie?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&include_adult=false&page=1"
 
     search_term = params['search']
     response = JSON.parse(RestClient.get("#{search_url}&query=#{search_term}"))
@@ -41,7 +41,7 @@ class MoviesController < ApplicationController
     if response['total_results'] > 0
       movies = response['results']
       render json: movies
-      Movie.add_many_to_database(movies)
+      Movie.create_or_update_many(movies)
     else
       render json: { error: 'no matches found' }
     end
