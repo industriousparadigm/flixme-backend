@@ -1,19 +1,11 @@
 class MoviesController < ApplicationController
 
   def index
-    # determine if we must re-seed by comparing popularity
-    Movie.count > 0 ? top_movie = Movie.limit(1).order('popularity desc').first : get_movies
+    movies = get_movies(params[:page])
 
-    movie_url = "https://api.themoviedb.org/3/movie/#{top_movie.id}?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US"
-    response = JSON.parse(RestClient.get(movie_url))
-
-    if response['popularity'] != top_movie.popularity
-      get_movies
-    end
-
-    params['limit'] ? limit = params['limit'].to_i : limit = 20
-    offset = params['offset'].to_i
-    movies = Movie.limit(limit).offset(offset).order('popularity desc')
+    # params['limit'] ? limit = params['limit'].to_i : limit = 20
+    # offset = params['offset'].to_i
+    # movies = Movie.limit(limit).offset(offset).order('popularity desc')
 
     render json: movies
   end
@@ -49,14 +41,11 @@ class MoviesController < ApplicationController
 
   private
 
-  def get_movies
+  def get_movies(starting_page = 1)
     movies_url = "https://api.themoviedb.org/3/discover/movie?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false"
-    page = 1
-    40.times do
-      response = JSON.parse(RestClient.get(movies_url + "&page=#{page}"))
-      Movie.create_or_update_many(response['results'])
-      page += 1
-    end
+    page = starting_page
+    response = JSON.parse(RestClient.get(movies_url + "&page=#{page}"))
+    Movie.create_or_update_many(response['results'])
   end
 
 end
