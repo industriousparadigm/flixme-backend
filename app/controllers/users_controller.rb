@@ -10,15 +10,15 @@ class UsersController < ApplicationController
   end
 
   def rate_movie
-    # puts "#{User.find_by(id: params[:userId]).firstName} has rated #{Movie.find_by(id: params[:movieId]).title} with #{params[:rating]} stars out of 5."
     user = User.find_by(id: params[:userId])
     movie = Movie.find_by(id: params[:movieId])
     rating = params[:rating]
 
     if user && movie
       MovieWatch.create_or_update(user.id, movie.id, rating)
+      render json: user
     else
-      puts "either user or movie id invalid"
+      render json: { error: "either user or movie not found" }
     end
   end
 end
