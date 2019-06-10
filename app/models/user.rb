@@ -7,6 +7,8 @@ class User < ApplicationRecord
   has_many :movie_watches
   has_many :movies, through: :movie_watches
 
+  has_secure_password
+
   def friends
     requesters + receivers
   end

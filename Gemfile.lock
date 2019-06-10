@@ -45,6 +45,7 @@ GEM
       tzinfo (~> 1.1)
     arel (8.0.0)
     awesome_print (1.8.0)
+    bcrypt (3.1.13)
     builder (3.2.3)
     byebug (11.0.1)
     case_transform (0.2)
@@ -150,6 +151,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   awesome_print
+  bcrypt (~> 3.1.7)
   byebug
   json
   listen (>= 3.0.5, < 3.2)

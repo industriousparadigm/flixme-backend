@@ -2,7 +2,7 @@ class UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :movies_watched
 
   def name
-    "#{object.firstName} #{object.lastName}"
+    "#{object.first_name} #{object.last_name}"
   end
 
   def movies_watched

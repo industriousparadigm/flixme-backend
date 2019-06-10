@@ -12,4 +12,5 @@ class MovieWatch < ApplicationRecord
       MovieWatch.create(user_id: user_id, movie_id: movie_id, rating: rating)
     end
   end
+
 end
