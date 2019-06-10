@@ -12,7 +12,7 @@ class MoviesController < ApplicationController
     if movie
       render json: movie
     else
-      render json: { error: 'movie not found' }
+      get_movie(params[:id])
     end
   end
 
@@ -42,6 +42,16 @@ class MoviesController < ApplicationController
     page = starting_page
     response = JSON.parse(RestClient.get(movies_url + "&page=#{page}"))
     Movie.create_or_update_many(response['results'])
+  end
+
+  def get_movie(movie_id)
+    movie_url = "https://api.themoviedb.org/3/movie/#{movie_id}?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US"
+    response = JSON.parse(RestClient.get(movie_url))
+    if response
+      render json: response
+    else
+      render json: { error: 'nope'}
+    end 
   end
 
 end
