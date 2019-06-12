@@ -38,9 +38,10 @@ class MoviesController < ApplicationController
   private
 
   def get_movies(starting_page = 1)
+    # first movies_url is for popular movies and second for top rated. Only one can be uncommented
     movies_url = "https://api.themoviedb.org/3/discover/movie?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false"
-    page = starting_page
-    response = JSON.parse(RestClient.get(movies_url + "&page=#{page}"))
+    # movies_url = "https://api.themoviedb.org/3/movie/top_rated?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US"
+    response = JSON.parse(RestClient.get(movies_url + "&page=#{starting_page}"))
     Movie.create_or_update_many(response['results'])
   end
 

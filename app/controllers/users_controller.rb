@@ -10,12 +10,12 @@ class UsersController < ApplicationController
   end
 
   def create
-    user = User.find_by(first_name: params[:firstName])
+    user = User.find_by(email: params[:email])
 
     if user
       render json: { error: 'user already exists' }
     else
-      render json: User.create(user)
+      render json: User.create(first_name: params[:first_name], last_name: params[:last_name], avatar_url: params[:avatar_url], email: params[:email], password: params[:password])
     end
   end
 
@@ -26,6 +26,17 @@ class UsersController < ApplicationController
       render json: { id: user.id }
     else
       render json: { error: 'login failed'}, status: 400
+    end
+  end
+
+  def validate
+    id = request.headers['Authorization']
+    user = User.find_by(id: id)
+
+    if user
+      render json: { userEmail: user.email, userId: user.id }
+    else
+      render json: { error: 'something bad persistence' }, status: 404
     end
   end
 
@@ -50,5 +61,12 @@ class UsersController < ApplicationController
       render json: { error: "either user or movie not found" }
     end
   end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email, :avatar_url, :password)
+  end
+
 
 end
