@@ -12,7 +12,11 @@ class User < ApplicationRecord
   has_secure_password
 
   def friends
-    requesters + receivers
+    (requesters + receivers).uniq
+  end
+
+  def request_friendship(user)
+    user.requesters << self
   end
 
 end

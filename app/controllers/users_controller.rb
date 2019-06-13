@@ -1,4 +1,14 @@
 class UsersController < ApplicationController
+  def index
+    users = User.all
+
+    if users.size > 0
+      render json: users
+    else
+      render json: { error: 'no users here' }
+    end
+  end
+
   def show
     user = User.find_by(id: params[:id])
 
@@ -16,6 +26,18 @@ class UsersController < ApplicationController
       render json: { error: 'user already exists' }
     else
       render json: User.create(first_name: params[:first_name], last_name: params[:last_name], avatar_url: params[:avatar_url], email: params[:email], password: params[:password])
+    end
+  end
+
+  def update
+    user = User.find_by(id: params[:id])
+
+    if user
+      user.update(avatar_url: params[:avatar_url])
+      user.save
+      render json: user
+    else
+      render json: { error: 'user not found' }
     end
   end
 
@@ -68,5 +90,16 @@ class UsersController < ApplicationController
     params.require(:user).permit(:first_name, :last_name, :email, :avatar_url, :password)
   end
 
+  def add_friend
+    requester = User.find_by(id: params[:requesterId])
+    receiver = User.find_by(id: params[:receiverId])
+
+    if requester && receiver
+      requester.request_friendship(receiver)
+      render json: Friendship.last
+    else
+      render json: { error: "problems with people involved" }
+    end    
+  end
 
 end

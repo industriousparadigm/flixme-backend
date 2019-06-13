@@ -1,5 +1,6 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :movies_watched
+  attributes :id, :name, :first_name, :last_name, :email, :avatar_url, :friends, :movies_watched
+  # has_many :friends
 
   def name
     "#{object.first_name} #{object.last_name}"
@@ -14,4 +15,5 @@ class UserSerializer < ActiveModel::Serializer
       }
     end
   end
+
 end
