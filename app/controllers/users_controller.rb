@@ -84,12 +84,6 @@ class UsersController < ApplicationController
     end
   end
 
-  private
-
-  def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :avatar_url, :password)
-  end
-
   def add_friend
     requester = User.find_by(id: params[:requesterId])
     receiver = User.find_by(id: params[:receiverId])
@@ -100,6 +94,22 @@ class UsersController < ApplicationController
     else
       render json: { error: "problems with people involved" }
     end    
+  end
+
+  def delete_friend
+    friendship = Friendship.find_by(requester_id: params[:requesterId], receiver_id: params[:receiverId])
+
+    if friendship
+      render json: friendship.destroy
+    else
+      render json: { error: "something bad went down" }
+    end
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email, :avatar_url, :password)
   end
 
 end
