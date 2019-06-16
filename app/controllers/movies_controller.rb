@@ -58,14 +58,13 @@ class MoviesController < ApplicationController
   end
 
   def get_movie(movie_id)
-    movie_url = "https://api.themoviedb.org/3/movie/#{movie_id}?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US"
-    credits_url = "https://api.themoviedb.org/3/movie/#{movie_id}/credits?api_key=#{Rails.application.secrets.tmdb_key}"
-    movie_response = JSON.parse(RestClient.get(movie_url))
-    credits_response = JSON.parse(RestClient.get(credits_url))
+    movie_url = "https://api.themoviedb.org/3/movie/#{movie_id}?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&append_to_response=credits,videos"
+    # credits_url = "https://api.themoviedb.org/3/movie/#{movie_id}/credits?api_key=#{Rails.application.secrets.tmdb_key}"
+    movie = JSON.parse(RestClient.get(movie_url))
+    # credits_response = JSON.parse(RestClient.get(credits_url))
     
-    if movie_response && credits_response
-      movie_response['credits'] = credits_response
-      render json: movie_response
+    if movie
+      render json: movie
     else
       render json: { error: 'nope'}
     end 
