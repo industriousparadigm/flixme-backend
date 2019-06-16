@@ -7,18 +7,30 @@ class MoviesController < ApplicationController
   end
 
   def show
-    movie = Movie.find_by(id: params[:id])
+    # movie = Movie.find_by(id: params[:id])
+    movie = get_movie(params[:id])
 
     if movie
-      render json: movie
+      movie
     else
-      get_movie(params[:id])
+      # get_movie(params[:id])
+      render json: { error: 'something bad?' }
     end
   end
 
   def create
     movie = Movie.add_to_database(params[:movie])
   end
+
+  # def credits
+  #   movie_credits = Movie.find_by(id: params[:id])
+
+  #   if movie
+  #     render json: movie_credits
+  #   else
+  #     render json: { error: 'something bad happened' }
+  #   end
+  # end
 
   def search
     search_url = "https://api.themoviedb.org/3/search/movie?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&include_adult=false&page=1"
@@ -47,9 +59,13 @@ class MoviesController < ApplicationController
 
   def get_movie(movie_id)
     movie_url = "https://api.themoviedb.org/3/movie/#{movie_id}?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US"
-    response = JSON.parse(RestClient.get(movie_url))
-    if response
-      render json: response
+    credits_url = "https://api.themoviedb.org/3/movie/#{movie_id}/credits?api_key=#{Rails.application.secrets.tmdb_key}"
+    movie_response = JSON.parse(RestClient.get(movie_url))
+    credits_response = JSON.parse(RestClient.get(credits_url))
+    
+    if movie_response && credits_response
+      movie_response['credits'] = credits_response
+      render json: movie_response
     else
       render json: { error: 'nope'}
     end 
