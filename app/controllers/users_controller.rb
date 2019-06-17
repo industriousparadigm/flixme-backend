@@ -32,10 +32,12 @@ class UsersController < ApplicationController
   def update
     user = User.find_by(id: params[:id])
 
+    byebug
+
     if user
       user.update(avatar_url: params[:avatar_url])
       user.save
-      render json: user
+      render json: user.save
     else
       render json: { error: 'user not found' }
     end

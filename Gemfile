@@ -11,6 +11,7 @@ gem 'rest-client'
 
 # random gems
 gem 'active_model_serializers'
+# gem 'fast_jsonapi'
 gem 'awesome_print'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
