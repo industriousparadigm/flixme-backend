@@ -47,6 +47,16 @@ class MoviesController < ApplicationController
     end
   end
 
+  def filter
+    filter_url = "https://api.themoviedb.org/3/discover/movie?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&include_adult=false&include_video=false&sort_by=popularity.desc&page=1&primary_release_date.gte=1995&primary_release_date.lte=1999"
+
+    response = JSON.parse(RestClient.get(filter_url))
+
+    movies = response['results']
+
+    render json: movies
+  end
+
   private
 
   def get_movies(starting_page = 1)
