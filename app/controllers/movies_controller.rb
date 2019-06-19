@@ -1,8 +1,14 @@
 class MoviesController < ApplicationController
 
   def index
-    movies = get_movies(params[:page])
+    queries = ''
+    queries += "&release_date.gte=#{params[:minYear]}" if params[:minYear]
+    queries += "&release_date.lte=#{params[:maxYear]}" if params[:maxYear]
+    queries += "&with_genres=#{params[:genres]}" if params[:genres]
+    params[:sorter] ? queries += "&sort_by=#{params[:sorter]}" : queries += '&sort_by=popularity.desc'
 
+    movies = get_movies(params[:page], queries)
+    
     render json: movies
   end
 
@@ -47,21 +53,12 @@ class MoviesController < ApplicationController
     end
   end
 
-  def filter
-    filter_url = "https://api.themoviedb.org/3/discover/movie?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&include_adult=false&include_video=false&sort_by=popularity.desc&page=1&primary_release_date.gte=1995&primary_release_date.lte=1999"
-
-    response = JSON.parse(RestClient.get(filter_url))
-
-    movies = response['results']
-
-    render json: movies
-  end
-
   private
 
-  def get_movies(starting_page = 1)
+  def get_movies(starting_page = 1, url_queries)
     # first movies_url is for popular movies and second for top rated. Only one can be uncommented
-    movies_url = "https://api.themoviedb.org/3/discover/movie?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false"
+    movies_url = "https://api.themoviedb.org/3/discover/movie?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US&include_adult=false&include_video=false#{url_queries}"
+
     # movies_url = "https://api.themoviedb.org/3/movie/top_rated?api_key=#{Rails.application.secrets.tmdb_key}&language=en-US"
     response = JSON.parse(RestClient.get(movies_url + "&page=#{starting_page}"))
     Movie.create_or_update_many(response['results'])

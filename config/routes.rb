@@ -6,11 +6,10 @@ Rails.application.routes.draw do
   # CRUD routes
   resources :movies, only: [:index, :show, :create]
   resources :users, only: [:index, :show, :create, :update]
-  resources :movie_watces, only: [:destroy]
+  resources :genres, only: [:index]
 
   # custom routes
   get '/movie_search', to: 'movies#search'
-  get '/filtered_search', to: 'movies#filter'
   post '/rate_movie', to: 'users#rate_movie'
   post '/forget_movie', to: 'users#forget_movie'
   post '/add_friend', to: 'users#add_friend'
