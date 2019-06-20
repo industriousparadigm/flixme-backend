@@ -71,7 +71,7 @@ class UsersController < ApplicationController
 
     if user && movie
       movie_watch = MovieWatch.create_or_update(user.id, movie.id, rating)
-      render json: movie_watch
+      render json: user
     else
       render json: { error: "either user or movie not found" }
     end
